@@ -8,38 +8,50 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors({
-  origin: [
+// CORS configuration
+const allowedOrigins = [
     'http://localhost:3000',
+    'https://nex-cart-practice.vercel.app',
     process.env.FRONTEND_URL
-  ].filter(Boolean),
-  credentials: true
+].filter(Boolean);
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests without an Origin header (e.g. Postman)
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true
 }));
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test route
+// Health check route
 app.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'NexCart Backend is working properly'
-  });
+    res.status(200).json({
+        success: true,
+        message: 'NexCart Backend is working properly'
+    });
 });
 
-// Ensure MongoDB is connected before API requests
+// Connect MongoDB before API requests
 app.use('/api', async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    console.error('Database error:', error.message);
+    try {
+        await connectDB();
+        next();
+    } catch (error) {
+        console.error('MongoDB connection error:', error.message);
 
-    res.status(503).json({
-      success: false,
-      message: 'Database connection failed'
-    });
-  }
+        res.status(503).json({
+            success: false,
+            message: 'Database connection failed'
+        });
+    }
 });
 
 // API routes
@@ -49,33 +61,44 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoute'));
 
-// Unknown routes
+// Handle unknown API routes
 app.use('/api', (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `API route not found: ${req.originalUrl}`
-  });
+    res.status(404).json({
+        success: false,
+        message: `API route not found: ${req.method} ${req.originalUrl}`
+    });
 });
 
-// Error handler
+// Global error handler
 app.use((err, req, res, next) => {
-  console.error('Backend error:', err.message);
+    console.error('Backend error:', err);
 
-  res.status(err.status || 500).json({
-    success: false,
-    message: err.message || 'Internal server error'
-  });
+    if (res.headersSent) {
+        return next(err);
+    }
+
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || 'Internal server error'
+    });
 });
 
-// Local development only
+// Local development
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5000;
 
-  app.listen(PORT, () => {
-    console.log(`NexCart server running on port ${PORT}`);
-  });
+    connectDB()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`NexCart server running on port ${PORT}`);
+            });
+        })
+        .catch((error) => {
+            console.error('Database connection failed:', error.message);
+            process.exit(1);
+        });
 }
 
-// Vercel entry point
+// Vercel serverless export
 module.exports = app;
 
