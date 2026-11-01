@@ -8,7 +8,10 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration
+// ===============================
+// CORS CONFIGURATION
+// ===============================
+
 const allowedOrigins = [
     'http://localhost:3000',
     'https://nex-cart-practice.vercel.app',
@@ -17,21 +20,34 @@ const allowedOrigins = [
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests without an Origin header (e.g. Postman)
+        // Allow Postman, server-to-server and requests without Origin
         if (!origin || allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
 
+        console.log('Blocked CORS origin:', origin);
         return callback(new Error('Not allowed by CORS'));
     },
     credentials: true
 }));
 
-// Middleware
+// Handle preflight requests
+app.options(/.*/, cors({
+    origin: allowedOrigins,
+    credentials: true
+}));
+
+// ===============================
+// BODY PARSING MIDDLEWARE
+// ===============================
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health check route
+// ===============================
+// HEALTH CHECK ROUTE
+// ===============================
+
 app.get('/', (req, res) => {
     res.status(200).json({
         success: true,
@@ -39,7 +55,10 @@ app.get('/', (req, res) => {
     });
 });
 
-// Connect MongoDB before API requests
+// ===============================
+// MONGODB CONNECTION MIDDLEWARE
+// ===============================
+
 app.use('/api', async (req, res, next) => {
     try {
         await connectDB();
@@ -54,14 +73,20 @@ app.use('/api', async (req, res, next) => {
     }
 });
 
-// API routes
+// ===============================
+// API ROUTES
+// ===============================
+
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoute'));
 
-// Handle unknown API routes
+// ===============================
+// UNKNOWN API ROUTE
+// ===============================
+
 app.use('/api', (req, res) => {
     res.status(404).json({
         success: false,
@@ -69,9 +94,12 @@ app.use('/api', (req, res) => {
     });
 });
 
-// Global error handler
+// ===============================
+// GLOBAL ERROR HANDLER
+// ===============================
+
 app.use((err, req, res, next) => {
-    console.error('Backend error:', err);
+    console.error('Backend error:', err.message);
 
     if (res.headersSent) {
         return next(err);
@@ -83,7 +111,10 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Local development
+// ===============================
+// LOCAL DEVELOPMENT SERVER
+// ===============================
+
 if (require.main === module) {
     const PORT = process.env.PORT || 5000;
 
@@ -99,6 +130,10 @@ if (require.main === module) {
         });
 }
 
-// Vercel serverless export
+// ===============================
+// VERCEL EXPORT
+// ===============================
+
 module.exports = app;
+
 
