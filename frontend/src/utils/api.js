@@ -1,5 +1,5 @@
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL;
 
 export async function apiRequest(path, options = {}) {
   let userInfo = null;
@@ -16,7 +16,9 @@ export async function apiRequest(path, options = {}) {
     ...options.headers
   };
 
-  if (!(options.body instanceof FormData)) {
+  const isFormData = options.body instanceof FormData;
+
+  if (!isFormData) {
     headers['Content-Type'] = 'application/json';
   }
 
@@ -26,7 +28,8 @@ export async function apiRequest(path, options = {}) {
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
-    headers
+    headers,
+    credentials: 'include'
   });
 
   const contentType = response.headers.get('content-type') || '';
@@ -52,4 +55,5 @@ export const formatPrice = (amount) =>
     currency: 'INR',
     maximumFractionDigits: 0
   }).format(Number(amount || 0));
+
 

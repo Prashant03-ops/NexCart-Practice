@@ -9,16 +9,37 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
   credentials: true
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Backend test route
+// Test route
 app.get('/', (req, res) => {
-  res.send('NexCart Backend is working properly');
+  res.status(200).json({
+    success: true,
+    message: 'NexCart Backend is working properly'
+  });
+});
+
+// Ensure MongoDB is connected before API requests
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database error:', error.message);
+
+    res.status(503).json({
+      success: false,
+      message: 'Database connection failed'
+    });
+  }
 });
 
 // API routes
@@ -28,10 +49,11 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoute'));
 
-// Handle unknown API routes
+// Unknown routes
 app.use('/api', (req, res) => {
   res.status(404).json({
-    message: `API route not found: ${req.method} ${req.originalUrl}`
+    success: false,
+    message: `API route not found: ${req.originalUrl}`
   });
 });
 
@@ -40,23 +62,20 @@ app.use((err, req, res, next) => {
   console.error('Backend error:', err.message);
 
   res.status(err.status || 500).json({
+    success: false,
     message: err.message || 'Internal server error'
   });
 });
 
-const PORT = process.env.PORT || 5000;
+// Local development only
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-  try {
-    await connectDB();
+  app.listen(PORT, () => {
+    console.log(`NexCart server running on port ${PORT}`);
+  });
+}
 
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Database connection failed:', error.message);
-    process.exit(1);
-  }
-};
+// Vercel entry point
+module.exports = app;
 
-startServer();
