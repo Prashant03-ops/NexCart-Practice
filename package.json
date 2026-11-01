@@ -1,0 +1,20 @@
+
+{
+  "name": "nexcart-full-stack",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend",
+    "dev:server": "npm run dev --prefix backend",
+    "dev:client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "build": "npm run build --prefix frontend"
+  },
+  "author": "Prashant",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
+

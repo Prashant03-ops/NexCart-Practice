@@ -1,0 +1,182 @@
+
+/* ================= PRODUCT CARD ================= */
+
+.product-card {
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 14px;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(249, 115, 22, 0.5);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(249, 115, 22, 0.3);
+}
+
+/* Product Image */
+
+.product-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    background: #27272a;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+/* Product Information */
+
+.product-info {
+    padding: 20px;
+    text-align: left;
+
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+
+    background: #18181b;
+    position: relative;
+    z-index: 2;
+}
+
+.product-info h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #ffffff;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Product Price */
+
+.product-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #f97316;
+    margin-bottom: 15px;
+}
+
+/* View Details Button */
+
+.view-details-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #f97316,
+        #ea580c
+    );
+
+    color: #ffffff;
+    text-align: center;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.view-details-button:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(249, 115, 22, 0.25);
+}
+
+/* ================= SEARCH BAR ================= */
+
+.search-bar {
+    width: 100%;
+    max-width: 500px;
+
+    padding: 15px 20px;
+    margin-bottom: 30px;
+
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+
+    color: #fafafa;
+    font-size: 16px;
+
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.search-bar:focus {
+    border-color: #f97316;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+/* ================= PRODUCT DETAIL PAGE ================= */
+
+.product-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    padding: 40px 20px;
+}
+
+.detail-price {
+    font-size: 2rem;
+    color: #f97316;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.detail-info p {
+    color: #a1a1aa;
+    line-height: 1.7;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+
+/* ================= RESPONSIVE DESIGN ================= */
+
+@media (max-width: 900px) {
+    .product-detail {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .product-image {
+        height: 220px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-info {
+        padding: 15px;
+    }
+
+    .product-image {
+        height: 250px;
+    }
+
+    .product-detail {
+        padding: 20px 10px;
+    }
+}
+

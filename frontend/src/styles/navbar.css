@@ -1,0 +1,218 @@
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+    width: 100%;
+    min-height: 95px;
+    padding: 12px 4%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    background: rgba(5, 7, 13, 0.96);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(36, 91, 255, 0.2);
+
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* ================= LOGO ================= */
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.navbar-logo {
+    width: 175px;
+    height: 68px;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+    transform: scale(1.05);
+}
+
+/* ================= NAVIGATION LINKS ================= */
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 38px;
+
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a {
+    position: relative;
+
+    color: #94A3B8;
+    font-size: 16px;
+    font-weight: 600;
+
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.navbar-links a:hover {
+    color: #C6FF00;
+}
+
+/* Underline Hover */
+
+.navbar-links a::after {
+    content: '';
+
+    position: absolute;
+    width: 0;
+    height: 2px;
+
+    left: 0;
+    bottom: -7px;
+
+    background: #C6FF00;
+    border-radius: 5px;
+
+    transition: width 0.3s ease;
+}
+
+.navbar-links a:hover::after {
+    width: 100%;
+}
+
+/* ================= CART COUNT ================= */
+
+.cart-link {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.cart-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+
+    border-radius: 50px;
+
+    background: #245BFF;
+    color: #FFFFFF;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ================= LOGIN BUTTON ================= */
+
+.login-btn {
+    padding: 10px 23px;
+    border-radius: 8px;
+
+    background: #245BFF;
+    color: #FFFFFF !important;
+
+    box-shadow: 0 0 18px rgba(36, 91, 255, 0.2);
+}
+
+.login-btn::after {
+    display: none;
+}
+
+.login-btn:hover {
+    background: #C6FF00;
+    color: #05070D !important;
+    box-shadow: 0 0 20px rgba(198, 255, 0, 0.2);
+}
+
+/* ================= LOGOUT ================= */
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid rgba(198, 255, 0, 0.4);
+
+    color: #C6FF00;
+
+    padding: 9px 18px;
+    border-radius: 8px;
+
+    font-size: 15px;
+    font-weight: 600;
+    font-family: inherit;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: #C6FF00;
+    color: #05070D;
+    box-shadow: 0 0 20px rgba(198, 255, 0, 0.25);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 768px) {
+    .navbar {
+        min-height: auto;
+        padding: 12px 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .navbar-logo {
+        width: 135px;
+        height: 55px;
+    }
+
+    .navbar-links {
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .navbar-links a {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        justify-content: center;
+    }
+
+    .navbar-links {
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .navbar-logo {
+        width: 125px;
+    }
+}
+
